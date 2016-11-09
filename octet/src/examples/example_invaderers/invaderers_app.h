@@ -149,8 +149,8 @@ namespace octet {
       num_sound_sources = 100,
       num_rows = 7,
       num_cols = 10,
-      num_missiles = 100,
-      num_bombs = 2,
+      num_missiles = 2,
+      num_bombs = 100,
       num_borders = 4,
       num_invaderers = num_rows * num_cols,
 
@@ -217,11 +217,32 @@ namespace octet {
       alSourcePlay(source);
 
       live_invaderers--;
-      score++;
-      if (live_invaderers == 4) 
+      score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+	  score ++;
+
+	  if (live_invaderers == 30)
 	  {
-        invader_velocity *= 4;
+		  invader_velocity *= 2;
+
+	  }
+      if (live_invaderers == 20) 
+	  {
+        invader_velocity *= 2;
+		
       } 
+	  if (live_invaderers == 10)
+	  {
+		  invader_velocity *= 3;
+
+	  }
 	  else if (live_invaderers == 0) 
 	  {
         game_over = true;
@@ -288,7 +309,7 @@ namespace octet {
 	  {
         --missiles_disabled;
       } 
-	  else if (is_key_down(' ')) 
+	  else if (is_key_going_up(' ')) 
 	  {
         // find a missile
         for (int i = 0; i != num_missiles; ++i) 
@@ -322,7 +343,7 @@ namespace octet {
               if (!sprites[first_bomb_sprite+i].is_enabled()) {
                 sprites[first_bomb_sprite+i].set_relative(invaderer, 0, -0.25f);
                 sprites[first_bomb_sprite+i].is_enabled() = true;
-                bombs_disabled = 2;
+                bombs_disabled = 10;
                 ALuint source = get_sound_source();
                 alSourcei(source, AL_BUFFER, whoosh);
                 alSourcePlay(source);
@@ -365,7 +386,7 @@ namespace octet {
 
     // animate the bombs
     void move_bombs() {
-      const float bomb_speed = 0.2f;
+      const float bomb_speed = 0.05f;
       for (int i = 0; i != num_bombs; ++i) {
         sprite &bomb = sprites[first_bomb_sprite+i];
         if (bomb.is_enabled()) {
@@ -480,7 +501,7 @@ namespace octet {
       }
 
       // set the border to white for clarity
-      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ffffff");
+      GLuint white = resource_dict::get_texture_handle(GL_RGB, "#ce1a1a");
       sprites[first_border_sprite+0].init(white, 0, -3, 6, 0.2f);
       sprites[first_border_sprite+1].init(white, 0,  3, 6, 0.2f);
       sprites[first_border_sprite+2].init(white, -3, 0, 0.2f, 6);
@@ -513,10 +534,12 @@ namespace octet {
       bombs_disabled = 50;
       invader_velocity = 0.01f;
       live_invaderers = num_invaderers;
-      num_lives = 3;
+      num_lives = 1;
       game_over = false;
       score = 0;
     }
+
+	
 
     // called every frame to move things
     void simulate() {
@@ -551,7 +574,7 @@ namespace octet {
       glViewport(x, y, w, h);
 
       // clear the background to black
-      glClearColor(0, 0, 0, 0);
+      glClearColor(0, 1, 1, 0);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       // don't allow Z buffer depth testing (closer objects are always drawn in front of far ones)
