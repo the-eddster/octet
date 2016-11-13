@@ -33,13 +33,16 @@ namespace octet {
 
     // true if this sprite is enabled.
     bool enabled;
+
   public:
-    sprite() {
+    sprite() 
+	{
       texture = 0;
       enabled = true;
     }
 
-    void init(int _texture, float x, float y, float w, float h) {
+    void init(int _texture, float x, float y, float w, float h) 
+	{
       modelToWorld.loadIdentity();
       modelToWorld.translate(x, y, 0);
       halfWidth = w * 0.5f;
@@ -48,7 +51,8 @@ namespace octet {
       enabled = true;
     }
 
-    void render(texture_shader &shader, mat4t &cameraToWorld) {
+    void render(texture_shader &shader, mat4t &cameraToWorld) 
+	{
       // invisible sprite... used for gameplay.
       if (!texture) return;
 
@@ -81,7 +85,8 @@ namespace octet {
       glEnableVertexAttribArray(attribute_pos);
     
       // this is an array of the positions of the corners of the texture in 2D
-      static const float uvs[] = {
+      static const float uvs[] = 
+	  {
          0,  0,
          1,  0,
          1,  1,
@@ -263,8 +268,10 @@ namespace octet {
     }
 
     // use the keyboard to move the ship
-    void move_ship() {
+    void move_ship() 
+	{
       const float ship_speed = 0.1f;
+
       // left and right arrows
       if (is_key_down(key_left)) 
 	  {
@@ -470,7 +477,8 @@ namespace octet {
   public:
 
     // this is called when we construct the class
-    invaderers_app(int argc, char **argv) : app(argc, argv), font(512, 256, "assets/big.fnt") {
+    invaderers_app(int argc, char **argv) : app(argc, argv), font(512, 256, "assets/big.fnt")
+	{
     }
 
     // this is called once OpenGL is initialized
@@ -542,8 +550,14 @@ namespace octet {
 	
 
     // called every frame to move things
-    void simulate() {
-      if (game_over) {
+    void simulate() 
+	{
+      if (game_over) 
+	  {
+		  if (is_key_going_up(key_backspace))
+		  {
+			  restart();
+		  }
         return;
       }
 
@@ -597,5 +611,22 @@ namespace octet {
       vec4 &cpos = cameraToWorld.w();
       alListener3f(AL_POSITION, cpos.x(), cpos.y(), cpos.z());
     }
+
+	void restart()
+	{	
+		app_init();
+
+			missiles_disabled = 0;
+			bombs_disabled = 50;
+			invader_velocity = 0.01f;
+			live_invaderers = num_invaderers;
+			num_lives = 1;
+			game_over = false;
+			score = 0;
+
+			simulate();
+		
+		
+	}
   };
 }
